@@ -1,0 +1,28 @@
+# Terraform state — NEVER commit these!
+*.tfstate
+*.tfstate.backup
+.terraform/
+.terraform.lock.hcl
+
+# Sensitive variables — NEVER commit!
+terraform.tfvars
+
+# App ZIP
+*.zip
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+*.swp
+
+# Azure CLI installers
+*.msi
+*.exe
+
+# Crash logs
+crash.log
+crash.*.log

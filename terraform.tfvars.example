@@ -1,0 +1,64 @@
+# ─── Copy this to terraform.tfvars and fill in your values ───────────────────
+# terraform.tfvars is gitignored — NEVER commit real values!
+
+# ─── General ──────────────────────────────────────────────────────────────────
+project_name        = "appgateway-demo"
+environment         = "dev"
+location            = "South India"
+resource_group_name = "rg-appgateway-demo"
+
+tags = {
+  Project     = "AppGateway-Demo"
+  Environment = "dev"
+  ManagedBy   = "Terraform"
+  Module      = "2"
+  Owner       = "your-email@example.com"
+}
+
+# ─── Networking ───────────────────────────────────────────────────────────────
+vnet_address_space           = "10.0.0.0/16"
+appgateway_subnet_cidr       = "10.0.1.0/24"
+appservice_subnet_cidr       = "10.0.2.0/24"
+private_endpoint_subnet_cidr = "10.0.3.0/24"
+enable_direct_access         = false  # true = allow direct internet access for testing only
+
+# ─── App Service ──────────────────────────────────────────────────────────────
+app_service_plan_sku = "B1"
+python_version       = "3.12"
+app_count            = 2
+
+# ─── Application Gateway ──────────────────────────────────────────────────────
+app_gateway_sku             = "Standard_v2"
+app_gateway_capacity        = 1
+app_gateway_probe_path      = "/health"
+app_gateway_probe_interval  = 30
+app_gateway_probe_timeout   = 30
+app_gateway_probe_threshold = 3
+
+# ─── Front Door ───────────────────────────────────────────────────────────────
+# Standard_AzureFrontDoor = no Private Link (~$35/month)
+# Premium_AzureFrontDoor  = Private Link supported (~$330/month, but pay per hour!)
+front_door_sku        = "Standard_AzureFrontDoor"
+health_probe_path     = "/health"
+health_probe_interval = 60
+health_probe_method   = "GET"
+
+# ─── Load Balancing ───────────────────────────────────────────────────────────
+origin_weight       = 1000
+origin_priority     = 1
+sample_size         = 4
+successful_samples  = 3
+latency_sensitivity = 50
+
+# ─── Custom Domain ────────────────────────────────────────────────────────────
+domain_name          = "yourdomain.com"
+subdomain            = "www"
+enable_custom_domain = true
+frontdoor_sp_app_id  = "ad0e1c7e-6d38-4ba4-9efd-0bc77ba9f037"
+
+# ─── WAF ──────────────────────────────────────────────────────────────────────
+enable_waf               = true
+waf_mode                 = "Detection"  # Start Detection → review logs → switch to Prevention
+waf_rate_limit_threshold = 100
+waf_allowed_countries    = ["IN"]
+log_retention_days       = 30
